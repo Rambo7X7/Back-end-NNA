@@ -11,7 +11,7 @@ app.use(express.json());
 app.get("/api/topics", getTopics);
 
 // Route to get an article by ID
-app.get("/api/articles/:article_id", getArticleById);
+// app.get("/api/articles/:article_id", getArticleById);
 
 // Route to get API documentation
 app.get("/api", (req, res, next) => {
