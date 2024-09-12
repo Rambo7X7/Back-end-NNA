@@ -20,3 +20,16 @@ exports.formatComments = (comments, idLookup) => {
     };
   });
 };
+
+exports.checkExists = (table_name, column_name, id) => {
+  const queryStr = format(
+    "SELECT * FROM %I WHERE %I = $1",
+    table_name,
+    column_name
+  );
+  return db.query(queryStr, [id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "not found" });
+    }
+  });
+};
