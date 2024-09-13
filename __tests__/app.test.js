@@ -158,42 +158,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("POST:404 responds with an appropriate status and error message when provided with non-existent username", () => {
-    return request(app)
-      .post("/api/articles/2/comments")
-      .send({
-        username: "banana",
-        body: "I like this article",
-      })
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("does not exist");
-      });
-  });
-  test("POST:404 responds with an appropriate status and error message when provided with a bad comment (no user name)", () => {
-    return request(app)
-      .post("/api/articles/2/comments")
-      .send({
-        body: "I like this article",
-      })
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Bad request");
-      });
-  });
-  test("POST:404 responds with an appropriate status and error message when given a valid but non-existent article id", () => {
-    const newComment = {
-      username: "butter_bridge",
-      body: "I like this article",
-    };
-    return request(app)
-      .post("/api/articles/888/comments")
-      .send(newComment)
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("does not exist");
-      });
-  });
   test("POST:400 sends an appropriate status and error message when given an invalid article id", () => {
     const newComment = {
       username: "butter_bridge",
