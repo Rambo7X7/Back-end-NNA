@@ -46,6 +46,7 @@ describe("GET /api", () => {
       });
   });
 });
+
 describe("GET /api/articles/:article_id", () => {
   test("200: Responds with requested article by ID", () => {
     return request(app)
@@ -84,6 +85,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
+
   test("200: Check there isn't a body property", () => {
     return request(app)
       .get("/api/articles")
@@ -130,6 +132,40 @@ describe("/api/articles/:article_id/comments", () => {
   test("400: Responds with 400 when article_id is invalid", () => {
     return request(app)
       .get("/api/articles/not-an-id/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST:201 inserts a new comment to the comments table and sends the new comment back to the client", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "I like this article",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment.comment_id).toBe(19);
+        expect(body.comment).toMatchObject({
+          body: "I like this article",
+          article_id: 2,
+          author: "butter_bridge",
+          votes: 0,
+        });
+      });
+  });
+  test("POST:400 sends an appropriate status and error message when given an invalid article id", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "I like this article",
+    };
+    return request(app)
+      .post("/api/articles/myId/comments")
+      .send(newComment)
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
