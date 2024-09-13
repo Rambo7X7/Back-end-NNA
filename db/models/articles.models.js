@@ -28,3 +28,14 @@ exports.selectArticleComments = (article_id) => {
       return data.rows;
     });
 };
+
+exports.insertNewCommentOnArticle = (author, body, article_id) => {
+  return db
+    .query(
+      "INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *",
+      [body, author, article_id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
