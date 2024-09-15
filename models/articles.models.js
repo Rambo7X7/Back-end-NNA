@@ -1,4 +1,4 @@
-const db = require("../connection");
+const db = require("../db/connection");
 
 exports.selectArticles = (article_id) => {
   return db
@@ -38,4 +38,19 @@ exports.insertNewCommentOnArticle = (author, body, article_id) => {
     .then((result) => {
       return result.rows[0];
     });
+};
+exports.updateArticleById = (inc_votes, article_id) => {
+  const queryStr = `
+    UPDATE articles 
+    SET votes = votes + $1 
+    WHERE article_id = $2 
+    RETURNING *;
+  `;
+
+  return db.query(queryStr, [inc_votes, article_id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "article does not exist" });
+    }
+    return rows[0];
+  });
 };

@@ -172,3 +172,42 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH:200 update an article votes by given number and sends the updated article back to the client", () => {
+    const votesCount = {
+      inc_votes: -100,
+    };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(votesCount)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({ article_id: 2, votes: -100 });
+      });
+  });
+  test("PATCH:400 sends an appropriate status and error message when given an invalid article id", () => {
+    const votesCount = {
+      inc_votes: -100,
+    };
+    return request(app)
+      .patch("/api/articles/updatedId")
+      .send(votesCount)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+
+  test("PATCH:404 responds with an appropriate status and error message when given a valid but non-existent article id", () => {
+    const votesCount = {
+      inc_votes: -100,
+    };
+    return request(app)
+      .patch("/api/articles/88")
+      .send(votesCount)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("article does not exist");
+      });
+  });
+});
