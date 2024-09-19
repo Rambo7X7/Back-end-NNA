@@ -98,7 +98,7 @@ describe("GET /api/articles", () => {
   });
 });
 
-describe("/api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   test("200: Responds with an array of comments for the given article ID", () => {
     return request(app)
       .get("/api/articles/1/comments")
