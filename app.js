@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const fs = require("fs/promises");
+const cors = require("cors");
+
 const { getTopics } = require("./controllers/topics.controller");
 const { getEndpoints } = require("./controllers/endpoints.controllers");
 const { getArticleById } = require("./controllers/articles.controller");
@@ -13,6 +15,8 @@ const { patchArticleById } = require("./controllers/articles.controller");
 //----------------------------------------------------
 
 app.use(express.json());
+
+app.use(cors());
 
 app.get("/api/topics", getTopics);
 
